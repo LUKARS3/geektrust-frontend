@@ -1,0 +1,27 @@
+:root{
+    --transitions: all 0.3s linear;
+}
+
+ul{
+    list-style-type: none;
+    display: flex;
+    gap: 1.5rem
+}
+
+ul > li{
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+li{
+    transition: var(--transitions);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+li:hover{
+    background: gainsboro;
+}

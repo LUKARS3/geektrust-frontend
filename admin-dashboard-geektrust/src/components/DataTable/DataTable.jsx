@@ -1,6 +1,9 @@
 /* eslint-disable react/prop-types */
 import './DataTable.css'
 function DataTable({ tableHeaders, data }) {
+    function getValues(row){
+        return Object.values(row).slice(1);
+    }
     return (
 
         <>
@@ -23,9 +26,9 @@ function DataTable({ tableHeaders, data }) {
                                 <td>
                                     <input type="checkbox" />
                                 </td>
-                                <td>{row.name}</td>
-                                <td>{row.email}</td>
-                                <td>{row.role}</td>
+                                {getValues(row).map((field) => {
+                                    return <td key={field}>{field}</td>
+                                })}
                             </tr>
                         )
                     })}

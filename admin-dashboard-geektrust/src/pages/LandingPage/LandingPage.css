@@ -10,7 +10,15 @@
 }
 
 .data-table {
+    display: flex;
+    flex-direction: column;
     background: #FFFFFF;
     border-radius: 0.3rem;
     padding: 1rem 1.5rem;
+}
+
+.pagination-deletion-container{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
