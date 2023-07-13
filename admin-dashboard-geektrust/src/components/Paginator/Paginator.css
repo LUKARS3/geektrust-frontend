@@ -1,27 +1,48 @@
-:root{
-    --transitions: all 0.3s linear;
+:root {
+    --transitions: all 0.2s linear;
+    --paginator-background-primary: #1b3f4e;
+    --font-color: aliceblue;
+    --font-color-secondary: #1b3f4e;
+    --paginator-background-secondary: gainsboro;
+    --paginator-background-tertiary: #abe6ff;
 }
 
-ul{
+ul {
     list-style-type: none;
     display: flex;
     gap: 1.5rem
 }
 
-ul > li{
+ul>li {
     height: 35px;
     width: 35px;
     border-radius: 50%;
     cursor: pointer;
+    background: var(--paginator-background-secondary);
 }
 
-li{
+li {
     transition: var(--transitions);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
-li:hover{
-    background: gainsboro;
+li:hover {
+    background: var(--paginator-background-tertiary);
+    color: var(--font-color-secondary);
+}
+
+page-active {
+    background: var(--paginator-background-primary);
+}
+
+.disabled {
+    cursor: not-allowed;
+    opacity: 0.4;
+}
+
+.active {
+    background: var(--paginator-background-primary);
+    color: var(--font-color);
 }

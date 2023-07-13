@@ -1,7 +1,14 @@
-function Button({label, clickHandler}){
-    return(
+import './Button.css'
+
+function Button({ label, clickHandler }) {
+    return (
         <>
-            <button onClick={clickHandler}>{label}</button>
+            <button
+                className="button-styles"
+                onClick={clickHandler}
+            >
+                {label}
+            </button>
         </>
     )
 }

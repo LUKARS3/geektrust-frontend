@@ -1,0 +1,22 @@
+:root {
+    --transitions: all 0.2s linear;
+    --button-background: #1b3f4e;
+    --font-color: aliceblue;
+    --button-background-secondary: #abe6ff;
+}
+
+.button-styles {
+    background-color: var(--button-background);
+    color: var(--font-color);
+    border: none;
+    padding: 0.4rem 1.5rem;
+    border-radius: 0.4rem;
+    cursor: pointer;
+    transition: var(--transitions);
+}
+
+
+.button-styles:hover {
+    background: var(--button-background-secondary);
+    color: var(--button-background);
+}
