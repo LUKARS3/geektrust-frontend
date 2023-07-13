@@ -1,0 +1,16 @@
+.landing-page-container {
+    width: 95vw;
+    margin: 0 auto;
+}
+
+
+
+.landing-page-content {
+    padding-top: 3rem;
+}
+
+.data-table {
+    background: #FFFFFF;
+    border-radius: 0.3rem;
+    padding: 1rem 1.5rem;
+}

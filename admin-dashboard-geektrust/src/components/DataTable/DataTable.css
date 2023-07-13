@@ -1,0 +1,18 @@
+:root {
+    --cell-padding: 0.7rem;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    color: #000000B0;
+}
+
+.table td,
+.table th {
+    text-align: left;
+    border-bottom: solid #F6F6F6;
+    text-transform: capitalize;
+    padding-top: var(--cell-padding);
+    padding-bottom: var(--cell-padding);
+}
