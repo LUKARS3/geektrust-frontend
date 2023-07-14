@@ -1,0 +1,9 @@
+.search-bar-styles{
+    margin-top: 1rem;
+    margin-bottom: 2rem;
+    width: 100%;
+    padding: 0.7rem;
+    border: 3px solid #1b3f4e;
+    border-radius: 2rem;
+    font-size: large;
+}
