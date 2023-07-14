@@ -1,15 +1,18 @@
+import { useContext, useState } from 'react';
+
+import { DataContext } from '../../contexts/DataProvider';
+
+//components
 import PageHeader from "../../components/Headers/PageHeader/PageHeader";
 import DataTable from "../../components/DataTable/DataTable";
 import Paginator from "../../components/Paginator/Paginator";
 import Button from "../../components/Button/Button";
 
-import { useState, useEffect } from "react";
 
 //constants for the entire app
-import 
-{landingPageTitle, 
-    usersDataEndPoint,
-    deleteButtonLabel, 
+import {
+    landingPageTitle,
+    deleteButtonLabel,
     pageSize
 } from "../../constants";
 
@@ -18,64 +21,57 @@ import
 import './LandingPage.css'
 
 function LandingPage() {
+    const tableData = useContext(DataContext);
+    const [currentPage, setCurrentPage] = useState(1);
+    const start = (currentPage - 1) * pageSize;
+    const end = currentPage * pageSize;
+    const paginatedData = tableData.slice(start, end);
 
-     //states
-     const [tableData, setTableData] = useState(null);
-     const [paginatedData, setPaginatedData] = useState(null);
-     const [totalPages, setTotalPages] = useState(null);
-     const [currentPage, setCurrentPage] = useState(1);
+    const totalPages = Math.ceil(tableData.length / pageSize);
 
-    //pages arr generator
-    function createAnArrayOfPages(size){
-        const pagesList = [];
-
-        for(let i=0; i<size; i++){
-            pagesList.push(i+1);
+    function handlePageChange(event) {
+        const clickedPage = event.target.dataset.id;
+        if (clickedPage == 'first') {
+            setCurrentPage(1);
+            return;
         }
 
-        setTotalPages(pagesList);
-    }
-
-    //returns paginated data
-    function fetchPaginatedData(){
-        const start = (currentPage-1) * pageSize;
-        const end = currentPage * pageSize;
-        setPaginatedData(tableData.slice(start, end));
-    }
-
-    //async function to fetch data
-    async function fetchData() {
-        try {
-            const response = await fetch(usersDataEndPoint);
-            const data = await response.json();
-            setTableData(data);
-            createAnArrayOfPages(Math.ceil(data.length/pageSize));
-            fetchPaginatedData();
-
-        } catch (error) {
-            console.log(error);
+        if (clickedPage == 'last') {
+            setCurrentPage(totalPages);
+            return;
         }
 
+        if (clickedPage == 'prev') {
+            const prevPage = currentPage - 1;
+            if (prevPage >= 1) {
+                setCurrentPage(() => prevPage);
+            }
+            return;
+        }
+
+        if (clickedPage == 'next') {
+            const nextPage = currentPage + 1;
+            if (nextPage <= totalPages) {
+                setCurrentPage(() => nextPage);
+            }
+            return;
+        }
+
+        setCurrentPage(() => Number(clickedPage));
     }
 
-    //deletion handler
-    function handleDeletionOfRows(){
-        console.log('merci');
+    //problem 1
+    //how to render search data? send the searched data to dataTable and paginator as porps
+    //handle on the child
+
+
+
+    function handleDeletionOfRows() {
+
     }
-
-   
-
-   
-
-
-    //to fecth data once
-    useEffect(() => {
-        fetchData();
-    }, []);
 
     //table headers
     const tableHeaders = ['name', 'email', 'role', 'actions'];
-
     return (
         <section className="landing-page-container">
             <article className="landing-page-content">
@@ -83,16 +79,20 @@ function LandingPage() {
                     <PageHeader pageTitle={landingPageTitle}></PageHeader>
                 </div>
 
-                {tableData?.length > 0 &&
+                {paginatedData?.length > 0 &&
                     <div className="data-table">
                         <DataTable tableHeaders={tableHeaders} data={paginatedData} />
 
                         <div className="pagination-deletion-container">
-                            <Button 
-                                clickHandler={handleDeletionOfRows} 
+                            <Button
+                                clickHandler={handleDeletionOfRows}
                                 label={deleteButtonLabel}
                             />
-                            <Paginator totalPages={totalPages}/>
+                            <Paginator
+                                totalPages={totalPages}
+                                clickHandler={handlePageChange}
+                                currentPage={currentPage}
+                            />
                         </div>
 
                     </div>
