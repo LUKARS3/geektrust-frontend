@@ -8,9 +8,11 @@ function App() {
   const [responseData, setResponseData] = useState(null);
   async function fetchData() {
     try {
+
       const response = await fetch(usersDataEndPoint);
       const data = await response.json();
       setResponseData(data);
+
     } catch (error) {
       console.log(error);
     }
