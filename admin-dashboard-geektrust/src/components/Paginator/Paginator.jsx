@@ -2,6 +2,8 @@
 import './Paginator.css'
 
 function Paginator({ totalPages, clickHandler, currentPage }) {
+
+    currentPage = Number(currentPage);
     const pages = [];
 
     for (let i = 0; i < totalPages; i++) {

@@ -1,11 +1,11 @@
 :root {
     --transitions: all 0.2s linear;
-    --button-background: #1b3f4e;
+    --button-background: #816797;
     --font-color: aliceblue;
     --button-background-secondary: #abe6ff;
 }
 
-.button-styles {
+.delete-button-styles {
     background-color: var(--button-background);
     color: var(--font-color);
     border: none;
@@ -16,7 +16,18 @@
 }
 
 
-.button-styles:hover {
+.delete-button-styles:hover {
     background: var(--button-background-secondary);
     color: var(--button-background);
+}
+
+.action-button-styles {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+    border-radius: 0.3rem;
+    height: 1.8rem;
+    width: 1.8rem;
+    cursor: pointer;
 }

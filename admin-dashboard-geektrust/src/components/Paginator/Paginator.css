@@ -1,10 +1,10 @@
 :root {
     --transitions: all 0.2s linear;
-    --paginator-background-primary: #1b3f4e;
-    --font-color: aliceblue;
-    --font-color-secondary: #1b3f4e;
-    --paginator-background-secondary: gainsboro;
-    --paginator-background-tertiary: #abe6ff;
+    --paginator-background-primary: #D6D5A8;
+    --font-color: #2c2d3b;
+    --font-color-secondary: #edecdd;
+    --paginator-background-secondary: #a3a8d8;
+    --paginator-background-tertiary: #816797;
 }
 
 ul {
