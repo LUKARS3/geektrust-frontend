@@ -1,0 +1,13 @@
+input {
+    border: 2px solid #1b3f4e;
+    padding: 0.5rem 1rem;
+    border-radius: 0.4rem;
+    transition: all 0.3s ease-in-out;
+}
+
+
+input:focus {
+    transform: translateY(-4px);
+    border: 2px solid #1b3f4e;
+    box-shadow: 3px 3px 3px #888888;
+}
