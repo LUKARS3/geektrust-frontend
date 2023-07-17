@@ -22,7 +22,8 @@ import Paginator from "../../components/Paginator/Paginator";
 import Button from "../../components/Buttons/Button";
 import EditableRow from '../EditableRow/EditableRow';
 
-import './DataTable.css';
+// import './DataTable.css';
+import '../Styles.css';
 
 //DataTable component
 function DataTable({

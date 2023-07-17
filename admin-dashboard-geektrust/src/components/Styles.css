@@ -5,6 +5,13 @@
     --button-background: #816797;
     --font-color: aliceblue;
     --button-background-secondary: #abe6ff;
+    --cell-padding: 0.7rem;
+    --transitions: all 0.2s linear;
+    --paginator-background-primary: #D6D5A8;
+    --font-color: #2c2d3b;
+    --font-color-secondary: #edecdd;
+    --paginator-background-secondary: #a3a8d8;
+    --paginator-background-tertiary: #816797;
 }
 
 .delete-button-styles {
@@ -38,10 +45,6 @@
 
 /* table */
 
-:root {
-    --cell-padding: 0.7rem;
-}
-
 .table {
     width: 100%;
     border-collapse: collapse;
@@ -69,7 +72,7 @@
 
 
 /* editable row */
-input {
+.edit-container  input {
     border: 2px solid #1b3f4e;
     padding: 0.5rem 1rem;
     border-radius: 0.4rem;
@@ -77,7 +80,7 @@ input {
 }
 
 
-input:focus {
+.edit-container input:focus {
     transform: translateY(-4px);
     border: 2px solid #1b3f4e;
     box-shadow: 3px 3px 3px #888888;
@@ -95,12 +98,7 @@ input:focus {
 
 /* paginator */
 :root {
-    --transitions: all 0.2s linear;
-    --paginator-background-primary: #D6D5A8;
-    --font-color: #2c2d3b;
-    --font-color-secondary: #edecdd;
-    --paginator-background-secondary: #a3a8d8;
-    --paginator-background-tertiary: #816797;
+   
 }
 
 ul {

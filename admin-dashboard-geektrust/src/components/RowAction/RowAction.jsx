@@ -1,4 +1,5 @@
-import './RowAction.css';
+// import './RowAction.css';
+import '../Styles.css';
 import Button from '../Buttons/Button';
 
 function RowActions({ buttonIcon, clickHandler, className, type, rowIndex, row }) {
