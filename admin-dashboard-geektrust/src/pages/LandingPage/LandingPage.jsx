@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 
 import { DataContext } from '../../contexts/DataProvider';
 
@@ -30,29 +30,37 @@ function LandingPage() {
     const [tableData, setTableData] = useState(responseData);
     const [datakeys] = useState(['id', 'email', 'name', 'role']);
     const [currentPage, setCurrentPage] = useState('1');
-    const [debounceTime, setDebounceTime] = useState(null);
-    const [searchParam, setSearchParam] = useState('');
     const [editableRowId, setEditableRowId] = useState('');
     const [selectedRows, setSelectedRows] = useState(new Set());
     const [selectedPages, setSelectedPages] = useState(new Set());
+    const [filteredData, setFilteredData] = useState([]);
+    const [searchParam, setSearchParam] = useState('');
     const [editedRow, setEditedRow] = useState({
         id: "",
         name: "",
         email: "",
         role: ""
-    })
+    });
 
+    useEffect(() => {
+        filterHandler(searchParam);
+    }, [tableData]);
 
-
-    function currentPageStateHandler(totalPages) {
-        setCurrentPage(() => totalPages);
+    //to debounce the search queries
+    function filterHandler(searchValue) {
+        const filteredData = filterDataBasedOnSearch(searchValue);
+        setFilteredData(() => filteredData);
     }
 
-    function filterDataBasedOnSearch() {
+    function currentPageStateHandler(page) {
+        setCurrentPage(() => page);
+    }
 
+    //filters based on searchValue, default ''
+    function filterDataBasedOnSearch(searchValue) {
         const filteredData = tableData.filter((row) => {
             return datakeys.some((objKey) => {
-                return row[objKey].includes(searchParam)
+                return row[objKey].toLowerCase().includes(searchValue);
             });
         });
 
@@ -62,15 +70,17 @@ function LandingPage() {
 
     function searchHandler(event) {
         const searchValue = (event.target.value).toLowerCase();
-        if (debounceTime) {
-            clearTimeout(debounceTime);
-        }
+        setCurrentPage(1);
+        setSearchParam(searchValue);
+        filterHandler(searchValue);
+    }
 
-        const timer = setTimeout(() => {
-            setSearchParam(searchValue);
-        }, 500);
-
-        setDebounceTime(timer);
+    function debounceSearch(callback, timeout) {
+        let timer;
+        return (...args) => {
+            clearTimeout(timer);
+            timer = setTimeout(() => { callback.apply(this, args); }, timeout);
+        };
     }
 
     function setCurrentPageAfterDeletion(dataRows) {
@@ -79,6 +89,8 @@ function LandingPage() {
         }
     }
 
+
+    //handles row actions edit, delete save
     function handleRowActions(event, row) {
         const actionType = event.currentTarget.dataset.actiontype;
         const rowId = event.currentTarget.dataset.id;
@@ -107,25 +119,28 @@ function LandingPage() {
         }
     }
 
+    //maintains a set of ids and selected row, for easy deletion
     function handleSelectedRows(event) {
         const rowId = event.currentTarget.dataset.id;
         const isChecked = event.target.checked;
         let selectedSetIds = new Set(selectedRows);
         let listOfSelectedPages = new Set(selectedPages);
-
+        const currentData = filteredData.length > 0 ? filteredData : tableData;
         const start = (currentPage - 1) * pageSize;
         const end = currentPage * pageSize;
         if (rowId === multipleDeletion) {
             if (isChecked) {
                 for (let i = start; i < end; i++) {
-                    if (tableData[i]?.id)
-                        selectedSetIds.add(tableData[i].id);
+                    if (currentData[i]?.id)
+                        selectedSetIds.add(currentData[i].id);
                 }
 
                 listOfSelectedPages.add(currentPage);
             } else {
                 for (let i = start; i < end; i++) {
-                    selectedSetIds.delete(tableData[i].id);
+                    if (selectedSetIds.size <= 0)
+                        break;
+                    selectedSetIds.delete(currentData[i].id);
                 }
                 listOfSelectedPages.delete(currentPage);
             }
@@ -139,6 +154,8 @@ function LandingPage() {
 
     }
 
+
+    //removes rows with ids present in the set
     function handleDeletionOfSelectedRows() {
         const dataRows = tableData.filter((row) => !(selectedRows.has(row.id)));
         setTableData(dataRows);
@@ -171,13 +188,15 @@ function LandingPage() {
                 </div>
                 <div className="data-table">
                     <div className="search-bar-container">
-                        <SearchBar placeHolder={quickSearchPlaceHolder} searchHandler={searchHandler} />
+                        <SearchBar
+                            placeHolder={quickSearchPlaceHolder}
+                            searchHandler={debounceSearch((event) => searchHandler(event), 500)} />
                     </div>
                     <div>
                         <DataTable
                             selectedRows={selectedRows}
                             tableHeaders={tableHeaders}
-                            data={filterDataBasedOnSearch()}
+                            data={filteredData}
                             handleRowActions={handleRowActions}
                             handleSelectedRows={handleSelectedRows}
                             handleDeletionOfSelectedRows={handleDeletionOfSelectedRows}
