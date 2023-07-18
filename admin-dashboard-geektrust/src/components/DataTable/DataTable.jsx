@@ -41,6 +41,7 @@ function DataTable({
 	editedRow
 }) {
 	//to get values arr of row obj
+	console.log('data in table' + JSON.stringify(data));
 	function getArrayOfValuesFromObject(row) {
 		return Object.values(row).slice(1);
 	}
