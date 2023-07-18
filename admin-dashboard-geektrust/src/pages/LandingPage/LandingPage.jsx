@@ -22,7 +22,7 @@ import {
 
 
 //styles
-import './LandingPage.css'
+import '../../components/Styles.css'
 
 function LandingPage() {
 

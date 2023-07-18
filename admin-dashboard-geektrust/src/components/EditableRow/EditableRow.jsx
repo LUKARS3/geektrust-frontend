@@ -1,4 +1,5 @@
-import './EditableRow.css'
+// import './EditableRow.css'
+import '../Styles.css';
 
 function EditableRow({ rowInputChangeHandler, row }) {
     return (

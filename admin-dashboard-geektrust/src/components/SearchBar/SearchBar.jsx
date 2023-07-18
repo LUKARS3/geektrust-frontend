@@ -1,4 +1,5 @@
-import './SearchBar.css'
+// import './SearchBar.css'
+import '../Styles.css';
 
 function SearchBar({ searchHandler, placeHolder }){
     return(

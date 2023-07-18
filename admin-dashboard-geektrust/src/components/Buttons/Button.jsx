@@ -1,5 +1,5 @@
 /* eslint-disable react/prop-types */
-import './Button.css'
+import '../Styles.css';
 
 function Button({ label, clickHandler, className, actionType, rowIndex, row }) {
     return (
