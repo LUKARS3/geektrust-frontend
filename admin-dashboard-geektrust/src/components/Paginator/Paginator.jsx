@@ -1,5 +1,6 @@
 /* eslint-disable react/prop-types */
-import './Paginator.css'
+// import './Paginator.css';
+import '../Styles.css';
 
 function Paginator({ totalPages, clickHandler, currentPage }) {
 
