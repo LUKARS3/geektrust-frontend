@@ -15,6 +15,8 @@
   --table-background: #E7E0EC;
   --font-color-primary : #1C1B1F;
   --on-surface-variant : #49454F;
+  --tranlateAlongY: translateY(-4px);
+  --boxShadow: 3px 3px 3px #888888;
 }
 
 body {
@@ -34,13 +36,18 @@ body {
   cursor: pointer;
   letter-spacing: 0.1rem;
   line-height: 2;
-  transition: var(--transitions);
+  transition: all 0.2s ease-out;
 }
 
 .delete-button-styles:hover {
-  background: var(--button-background-secondary);
-  color: var(--button-background);
+  transform: var(--tranlateAlongY);
+  box-shadow: var(--boxShadow);
 }
+
+.delete-button-styles:active {
+    transform: translateY(2px);
+    box-shadow: 1px 1px 3px #888888;
+  }
 
 .action-button-styles {
   display: flex;
@@ -100,9 +107,9 @@ td:nth-child(n+2) input {
 }
 
 td:nth-child(n+2) input:focus {
-  transform: translateY(-4px);
+  transform: var(--tranlateAlongY);
   border: 2px solid #1b3f4e;
-  box-shadow: 3px 3px 3px #888888;
+  box-shadow: var(--boxShadow);
 }
 
 th:nth-child(1) input,
@@ -137,6 +144,7 @@ ul > li {
   cursor: pointer;
   color: var(--font-color);
   background: var(--paginator-background-secondary);
+  transition: var(--transitions);
 }
 
 li {
@@ -147,8 +155,9 @@ li {
 }
 
 li:hover {
-  background: var(--paginator-background-tertiary);
-  color: var(--font-color-secondary);
+  /* background: var(--paginator-background-tertiary);
+  color: var(--font-color-secondary); */
+  transform: var(--tranlateAlongY);
 }
 
 page-active {
@@ -156,13 +165,17 @@ page-active {
 }
 
 .disabled {
-  cursor: not-allowed;
+  pointer-events: none;
   opacity: 0.4;
 }
 
 .active {
   background: var(--on-background);
   color: var(--font-color);
+}
+
+.active:hover{
+    transform: translateY(0);
 }
 
 /* row action */
