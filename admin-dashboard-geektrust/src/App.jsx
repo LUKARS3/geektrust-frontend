@@ -1,11 +1,13 @@
 import LandingPage from "./pages/LandingPage/LandingPage";
 import { usersDataEndPoint } from "./constants";
 import { useEffect, useState } from "react";
-import { DataContext } from "./contexts/DataProvider";
+import { DataContext, DeviceWidthContext } from "./contexts/DataProvider";
+
 
 function App() {
   //async function to fetch data
   const [responseData, setResponseData] = useState(null);
+  const [deviceWidth, setDeviceWidth] = useState(null);
   async function fetchData() {
     try {
 
@@ -18,8 +20,20 @@ function App() {
     }
   }
 
+  function dimensionUpdateHandler() {
+    const width = window.innerWidth;
+    setDeviceWidth(() => width);
+  }
+
   useEffect(() => {
     fetchData();
+    dimensionUpdateHandler();
+    window.addEventListener("resize", dimensionUpdateHandler);
+
+    //cleanup
+    return () => {
+      window.removeEventListener("resize", dimensionUpdateHandler);
+    }
   }, []);
 
 
@@ -27,7 +41,9 @@ function App() {
     <>
       {responseData?.length > 0 &&
         <DataContext.Provider value={responseData}>
-          <LandingPage />
+          <DeviceWidthContext.Provider value={deviceWidth}>
+            <LandingPage />
+          </DeviceWidthContext.Provider>
         </DataContext.Provider>}
     </>
   )
