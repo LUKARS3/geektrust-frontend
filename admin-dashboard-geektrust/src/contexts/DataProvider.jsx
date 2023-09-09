@@ -1,3 +1,10 @@
 import { createContext } from "react";
 
-export const DataContext = createContext('');
+const DataContext = createContext('');
+const DeviceWidthContext = createContext('');
+
+
+export {
+    DataContext,
+    DeviceWidthContext
+}

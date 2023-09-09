@@ -3,6 +3,13 @@ import RowActions from '../RowAction/RowAction';
 import editIcon from '../../assets/edit-multicolor.svg';
 import deleteIcon from '../../assets/delete-multicolor.svg';
 import saveIcon from '../../assets/save-multicolor.svg';
+import React, { useState, useContext } from 'react';
+import { DeviceWidthContext } from '../../contexts/DataProvider';
+
+//paginator responsive
+//edit on mobiles
+//css for inputs checkbox
+
 
 //constants
 import {
@@ -40,12 +47,22 @@ function DataTable({
 	rowInputChangeHandler,
 	editedRow
 }) {
+	const deviceWidth = useContext(DeviceWidthContext);
+	const isDesktop = deviceWidth > 800;
+
+	const [currentRow, setCurrentRow] = useState(null);
+	const [isActive, setIsActive] = useState(null);
+
 	//to get values arr of row obj
-	console.log('data in table' + JSON.stringify(data));
 	function getArrayOfValuesFromObject(row) {
-		return Object.values(row).slice(1);
+		return Object.keys(row).slice(1);
 	}
 
+	function handleAccordion(event) {
+		let rowId = event.currentTarget.dataset.id;
+		setIsActive(() => rowId != currentRow);
+		setCurrentRow(() => rowId != currentRow ? rowId : null);
+	}
 
 	function handlePageChange(event) {
 
@@ -61,7 +78,7 @@ function DataTable({
 		}
 
 		if (clickedPage == 'prev') {
-			const prevPage = currentPage - 1;
+			const prevPage = Number(currentPage) - 1;
 			if (prevPage >= 1) {
 				currentPageStateHandler(prevPage);
 			}
@@ -69,7 +86,7 @@ function DataTable({
 		}
 
 		if (clickedPage == 'next') {
-			const nextPage = currentPage + 1;
+			const nextPage = Number(currentPage) + 1;
 			if (nextPage <= totalPages) {
 				currentPageStateHandler(nextPage);
 			}
@@ -79,88 +96,198 @@ function DataTable({
 		currentPageStateHandler(clickedPage);
 	}
 	const totalPages = Math.ceil(data.length / pageSize);
-	const start = (currentPage - 1) * pageSize;
-	const end = currentPage * pageSize;
+	const start = (Number(currentPage) - 1) * pageSize;
+	const end = Number(currentPage) * pageSize;
 	const paginatedData = data.slice(start, end);
+
+	//Data Cells for tables
+	const DataCells = ({ row }) => {
+		return (
+			getArrayOfValuesFromObject(row).map((field) => {
+				if (isDesktop) {
+					return (
+						<td key={field}>
+							{row[field]}
+						</td>
+					);
+				} else {
+					return (
+						<div key={field} className="accordion-data">
+							<div className="accordion-body-label">
+								{field}
+							</div>
+							<div >
+								<span>
+									{row[field]}
+								</span>
+							</div>
+						</div>
+					)
+				}
+
+			})
+		);
+	};
+
+	//row actions for each row
+	const RowActionsContainer = ({ row, index }) => {
+		return (
+			<div className="actions-container">
+				<RowActions
+					buttonIcon={editableRowId == row.id ? saveIcon : editIcon}
+					clickHandler={handleRowActions}
+					className={actionButtonStyles}
+					type={editableRowId == row.id ? rowActionSave : rowActionEdit}
+					row={row}
+					rowIndex={index}
+				/>
+
+				<RowActions
+					buttonIcon={deleteIcon}
+					clickHandler={handleRowActions}
+					className={actionButtonStyles}
+					type={rowActionDelete}
+					row={row}
+					rowIndex={index}
+				/>
+
+			</div>
+		)
+	}
+
+
+	//htmlDataTable for desktops and laptops
+	const HtmlDataTable =
+		<>
+			<div>
+				<table className='table'>
+					<thead>
+						<tr>
+							<th>
+								<input
+									type='checkbox'
+									data-id={multipleDeletion}
+									onChange={handleSelectedRows}
+									checked={selectedPages.has(currentPage)}
+								/>
+							</th>
+							{tableHeaders.map((header) => {
+								return <th key={header}>{header}</th>;
+							})}
+						</tr>
+					</thead>
+
+					<tbody>
+						{paginatedData.map((row, index) => {
+							return (
+								<tr key={row.id} className={`${selectedRows.has(row.id) ? "selected-row" : ""}`}>
+									<td>
+										<input
+											data-id={row.id}
+											type="checkbox"
+											checked={selectedRows.has(row.id)}
+											onChange={handleSelectedRows}
+										/>
+									</td>
+
+									{row.id != editableRowId ?
+										(<DataCells row={row} />) :
+										(<EditableRow
+											row={editedRow}
+											rowInputChangeHandler={rowInputChangeHandler}
+											isDesktop={isDesktop}
+										/>
+										)
+									}
+									<td>
+										<RowActionsContainer row={row} index={index} />
+									</td>
+								</tr>
+							)
+						})}
+					</tbody>
+
+				</table>
+			</div>
+		</>
+
+	//for tablets and phones
+	const Accordion =
+		<>
+			<div className="accordions">
+				<div className="select-all">
+					<input
+						type='checkbox'
+						data-id={multipleDeletion}
+						onChange={handleSelectedRows}
+						checked={selectedPages.has(currentPage)}
+						id="selectAll"
+					/>
+					<label htmlFor="selectAll">Select All</label>
+				</div>
+				{paginatedData.map((row, index) => {
+					return (
+						<div key={row.id}>
+							<div>
+								<div className="mobile-dataTable">
+									<div>
+										<input
+											type='checkbox'
+											onChange={handleSelectedRows}
+											data-id={row.id}
+											checked={selectedRows.has(row.id)}
+										/>
+									</div>
+									<div className="accordion-container">
+										<div
+											className={
+												`accordion-label 
+												${row.id == currentRow && isActive ? 'accordion-active' : ''}
+												${selectedRows.has(row.id) ? "selected-row" : ""}`
+											}
+											onClick={handleAccordion}
+											data-id={row.id}
+										>
+											<div>
+												<div>{row.name}</div>
+												<div>{row.role}</div>
+											</div>
+										</div>
+										<div className={`accordion-body ${row.id == currentRow && isActive ? 'accordion-body-active' : ''}`}>
+											{row.id != editableRowId ?
+												(<DataCells row={row} />) :
+												(<EditableRow
+													row={editedRow}
+													rowInputChangeHandler={rowInputChangeHandler}
+													isDesktop={isDesktop}
+												/>
+												)
+											}
+											<div>
+												<div className="accordion-body-label">
+													{'Actions'}
+												</div>
+												<RowActionsContainer row={row} index={index} />
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+							<hr />
+						</div>
+					)
+				})
+				}
+			</div>
+		</>
+
+	const dataTableToRender = isDesktop ? HtmlDataTable : Accordion;
 	return (
 		<>
 			{
 				paginatedData.length > 0 ?
 					<>
-						<div>
-							<table className='table'>
-								<thead>
-									<tr>
-										<th>
-											<input
-												type='checkbox'
-												data-id={multipleDeletion}
-												onChange={handleSelectedRows}
-												checked={selectedPages.has(currentPage)}
-											/>
-										</th>
-										{tableHeaders.map((header) => {
-											return <th key={header}>{header}</th>;
-										})}
-									</tr>
-								</thead>
-
-								<tbody>
-									{paginatedData.map((row, index) => {
-										return (
-											<tr key={row.id} className={`${selectedRows.has(row.id) ? "selected-row" : ""}`}>
-												<td>
-													<input
-														data-id={row.id}
-														type="checkbox"
-														checked={selectedRows.has(row.id)}
-														onChange={handleSelectedRows}
-													/>
-												</td>
-
-												{row.id != editableRowId ?
-													(getArrayOfValuesFromObject(row).map((field) => {
-														return (
-															<td key={field}>
-																{field}
-															</td>
-														)
-													})
-													) :
-													(<EditableRow row={editedRow} rowInputChangeHandler={rowInputChangeHandler} />)}
-
-												{/* {row.id != editableRowId && <td> */}
-												<td>
-													<div className="actions-container">
-														<RowActions
-															buttonIcon={editableRowId == row.id ? saveIcon : editIcon}
-															clickHandler={handleRowActions}
-															className={actionButtonStyles}
-															type={editableRowId == row.id ? rowActionSave : rowActionEdit}
-															row={row}
-															rowIndex={index}
-														/>
-
-														<RowActions
-															buttonIcon={deleteIcon}
-															clickHandler={handleRowActions}
-															className={actionButtonStyles}
-															type={rowActionDelete}
-															row={row}
-															rowIndex={index}
-														/>
-
-													</div>
-													{/* </td>} */}
-												</td>
-											</tr>
-										)
-									})}
-								</tbody>
-
-							</table>
-						</div>
-
+						{dataTableToRender}
 						<div className="pagination-deletion-container">
 							<Button
 								clickHandler={handleDeletionOfSelectedRows}
@@ -184,6 +311,7 @@ function DataTable({
 
 	);
 }
+
 
 
 export default DataTable;
